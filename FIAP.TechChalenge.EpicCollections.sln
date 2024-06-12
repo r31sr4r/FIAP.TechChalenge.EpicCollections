@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0D71241B-9D38-46DC-BC86-C8310362B17B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1177CB7E-754C-4393-BCBC-83B3C20C9DDD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.UnitTests", "tests\FIAP.TechChalenge.EpicCollections.UnitTests\FIAP.TechChalenge.EpicCollections.UnitTests.csproj", "{404C128F-57B8-45BE-A20F-E70C5E621404}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.Infra.Data.EF", "src\FIAP.TechChalenge.EpicCollections.Infra.Data.EF\FIAP.TechChalenge.EpicCollections.Infra.Data.EF.csproj", "{8DBAC535-C8AB-4785-ACB4-A370713EDE48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.Domain", "src\FIAP.TechChalenge.EpicCollections.Domain\FIAP.TechChalenge.EpicCollections.Domain.csproj", "{C36D02FF-8A84-4768-96D2-9C9B46A48066}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.Application", "src\FIAP.TechChalenge.EpicCollections.Application\FIAP.TechChalenge.EpicCollections.Application.csproj", "{5C9025C3-9B97-4B85-9756-2444B439BDCF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.IntegrationTests", "tests\FIAP.TechChalenge.EpicCollections.IntegrationTests\FIAP.TechChalenge.EpicCollections.IntegrationTests.csproj", "{1004A8F6-B25B-44F1-967D-F1D940B55DE5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.Api", "src\FIAP.TechChalenge.EpicCollections.Api\FIAP.TechChalenge.EpicCollections.Api.csproj", "{138997B0-DBA4-4B7B-A4BD-82517A6DD862}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{329F9CB7-E29D-4B92-8E11-F377587C88DB}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIAP.TechChalenge.EpicCollections.E2ETests", "tests\FIAP.TechChalenge.EpicCollections.E2ETests\FIAP.TechChalenge.EpicCollections.E2ETests.csproj", "{EBD1C994-28D0-4C8A-82C4-2179DE8D9563}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{404C128F-57B8-45BE-A20F-E70C5E621404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{404C128F-57B8-45BE-A20F-E70C5E621404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{404C128F-57B8-45BE-A20F-E70C5E621404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{404C128F-57B8-45BE-A20F-E70C5E621404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DBAC535-C8AB-4785-ACB4-A370713EDE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DBAC535-C8AB-4785-ACB4-A370713EDE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DBAC535-C8AB-4785-ACB4-A370713EDE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DBAC535-C8AB-4785-ACB4-A370713EDE48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C36D02FF-8A84-4768-96D2-9C9B46A48066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C36D02FF-8A84-4768-96D2-9C9B46A48066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C36D02FF-8A84-4768-96D2-9C9B46A48066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C36D02FF-8A84-4768-96D2-9C9B46A48066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{138997B0-DBA4-4B7B-A4BD-82517A6DD862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{138997B0-DBA4-4B7B-A4BD-82517A6DD862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{138997B0-DBA4-4B7B-A4BD-82517A6DD862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{138997B0-DBA4-4B7B-A4BD-82517A6DD862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBD1C994-28D0-4C8A-82C4-2179DE8D9563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBD1C994-28D0-4C8A-82C4-2179DE8D9563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBD1C994-28D0-4C8A-82C4-2179DE8D9563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBD1C994-28D0-4C8A-82C4-2179DE8D9563}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{404C128F-57B8-45BE-A20F-E70C5E621404} = {1177CB7E-754C-4393-BCBC-83B3C20C9DDD}
+		{8DBAC535-C8AB-4785-ACB4-A370713EDE48} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
+		{C36D02FF-8A84-4768-96D2-9C9B46A48066} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
+		{5C9025C3-9B97-4B85-9756-2444B439BDCF} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5} = {1177CB7E-754C-4393-BCBC-83B3C20C9DDD}
+		{138997B0-DBA4-4B7B-A4BD-82517A6DD862} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
+		{EBD1C994-28D0-4C8A-82C4-2179DE8D9563} = {1177CB7E-754C-4393-BCBC-83B3C20C9DDD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B98D997-BC76-42EF-BBDC-F50666A9FCD8}
+	EndGlobalSection
+EndGlobal

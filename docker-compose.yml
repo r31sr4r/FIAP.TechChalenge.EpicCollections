@@ -2,9 +2,9 @@ version: '3.4'
 
 services:
 
-  netsimpleblog.db:
-    container_name: netsimpleblogdb
-    hostname: netsimpleblogdb
+  epiccollections.db:
+    container_name: epiccollectionsdb
+    hostname: epiccollectionsdb
     image: mysql
     ports:
       - 3306:3306
@@ -13,5 +13,5 @@ services:
 
 networks:
   default: 
-    name: service_netsimpleblog
+    name: service_epiccollections
 
