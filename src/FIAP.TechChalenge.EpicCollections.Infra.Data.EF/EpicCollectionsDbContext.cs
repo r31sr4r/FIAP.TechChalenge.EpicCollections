@@ -7,6 +7,7 @@ public class EpicCollectionsDbContext
     : DbContext
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<Collection> Collections => Set<Collection>();
 
     public EpicCollectionsDbContext(
         DbContextOptions<EpicCollectionsDbContext> options)
@@ -15,5 +16,6 @@ public class EpicCollectionsDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new CollectionConfiguration());
     }
 }
