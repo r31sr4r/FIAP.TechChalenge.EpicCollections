@@ -1,7 +1,6 @@
 ﻿using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
 using FIAP.TechChalenge.EpicCollections.Domain.Exceptions;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork;
-using FIAP.TechChalenge.EpicCollections.Domain.Validation;
 
 namespace FIAP.TechChalenge.EpicCollections.Domain.Entity
 {
@@ -15,15 +14,14 @@ namespace FIAP.TechChalenge.EpicCollections.Domain.Entity
             Guid userId,
             string name,
             string description,
-            Category category,
-            DateTime createdAt
+            Category category
         ) : base()
         {
             UserId = userId;
             Name = name;
             Description = description;
             Category = category;
-            CreatedAt = createdAt;
+            CreatedAt = DateTime.Now;
 
             Validate();
         }

@@ -32,8 +32,7 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
                 userId,
                 GetValidCollectionName(),
                 GetValidDescription(),
-                GetRandomCategory(),
-                GetRandomDate()
+                GetRandomCategory()
             );
 
         public List<Collection> GetExampleCollectionList(Guid userId, int length = 10)
@@ -65,8 +64,7 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
                 userId,
                 name,
                 GetValidDescription(),
-                GetRandomCategory(),
-                DateTime.Now
+                GetRandomCategory()
             )).ToList();
         }
 

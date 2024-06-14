@@ -22,8 +22,7 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
             UserId = Guid.NewGuid(),
             Name = "My Action Figures",
             Description = "A collection of my favorite action figures.",
-            Category = Category.ActionFigures,
-            CreatedAt = DateTime.Now
+            Category = Category.ActionFigures
         };
 
         private DomainEntity.Collection CreateCollection(CollectionData data) =>
@@ -31,8 +30,7 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
                 data.UserId,
                 data.Name!,
                 data.Description!,
-                data.Category,
-                data.CreatedAt
+                data.Category
         );
 
         [Fact(DisplayName = nameof(Instantiate))]
@@ -68,16 +66,14 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
                 UserId = Guid.NewGuid(),
                 Name = name,
                 Description = "A collection of my favorite action figures.",
-                Category = Category.ActionFigures,
-                CreatedAt = DateTime.Now
+                Category = Category.ActionFigures                
             };
 
             Action action = () => new DomainEntity.Collection(
                 data.UserId,
                 data.Name!,
                 data.Description,
-                data.Category,
-                data.CreatedAt
+                data.Category
                 );
 
             action.Should()
