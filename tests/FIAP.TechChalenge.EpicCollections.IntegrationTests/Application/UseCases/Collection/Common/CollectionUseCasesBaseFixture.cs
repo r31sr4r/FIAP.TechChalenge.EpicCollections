@@ -23,19 +23,20 @@ public class CollectionUseCasesBaseFixture : BaseFixture
     public Category GetValidCategory()
         => Faker.PickRandom<Category>();
 
-    public DomainEntity.Collection GetValidCollection(Guid userId)
+    public DomainEntity.Collection GetValidCollection(Guid? userId = null)
         => new(
-            userId,
+            userId ?? Guid.NewGuid(),
             GetValidName(),
             GetValidDescription(),
             GetValidCategory()
         );
 
-    public List<DomainEntity.Collection> GetCollectionsList(int length = 10)
+    public List<DomainEntity.Collection> GetCollectionsList(Guid? userId = null, int length = 10)
     {
-        var userId = Guid.NewGuid();
+        var generatedUserId = userId ?? Guid.NewGuid();
         return Enumerable.Range(1, length)
-            .Select(_ => GetValidCollection(userId))
+            .Select(_ => GetValidCollection(generatedUserId))
             .ToList();
     }
+
 }

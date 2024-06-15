@@ -32,9 +32,9 @@ public class CollectionUseCasesBaseFixture : BaseFixture
         return description;
     }
 
-    public DomainEntity.Collection GetValidCollection(Guid userId)
+    public DomainEntity.Collection GetValidCollection(Guid? userId = null)
         => new(
-            userId,
+            userId ?? Guid.NewGuid(),
             GetValidCollectionName(),
             GetValidDescription(),
             Faker.PickRandom<Category>()
