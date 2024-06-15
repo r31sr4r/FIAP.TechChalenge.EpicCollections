@@ -52,6 +52,8 @@ namespace FIAP.TechChalenge.EpicCollections.Domain.Entity
                 throw new EntityValidationException($"{nameof(Name)} should be less than 255 characters");
             if (string.IsNullOrWhiteSpace(Description))
                 throw new EntityValidationException($"{nameof(Description)} should not be empty or null");
+            if (!Enum.IsDefined(typeof(Category), Category))
+                throw new EntityValidationException($"{nameof(Category)} must be a valid value");
         }
     }
 }

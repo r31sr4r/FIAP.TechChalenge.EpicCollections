@@ -32,18 +32,34 @@ public class CollectionUseCasesBaseFixture : BaseFixture
         return description;
     }
 
+    public string GetValidName()
+    {
+        var name = "";
+        while (name.Length < 3)
+            name = Faker.Commerce.ProductName();
+        if (name.Length > 255)
+            name = name[..255];
+        return name;
+    }
+
+    public Category GetValidCategory()
+    {
+        return Faker.PickRandom<Category>();
+    }
+
     public DomainEntity.Collection GetValidCollection(Guid? userId = null)
         => new(
             userId ?? Guid.NewGuid(),
             GetValidCollectionName(),
             GetValidDescription(),
-            Faker.PickRandom<Category>()
+            GetValidCategory()
         );
 
-    public List<DomainEntity.Collection> GetCollectionsList(Guid userId, int length = 10)
+    public List<DomainEntity.Collection> GetCollectionsList(Guid? userId = null, int length = 10)
     {
+        var actualUserId = userId ?? Guid.NewGuid();
         return Enumerable.Range(1, length)
-            .Select(_ => GetValidCollection(userId))
+            .Select(_ => GetValidCollection(actualUserId))
             .ToList();
     }
 }
