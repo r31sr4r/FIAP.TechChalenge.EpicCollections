@@ -1,7 +1,9 @@
 ﻿using FIAP.TechChalenge.EpicCollections.Api.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using FIAP.TechChalenge.EpicCollections.Api.Configurations.Policies;
+using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
 
 namespace FIAP.TechChalenge.EpicCollections.Api.Configurations;
 
@@ -14,7 +16,7 @@ public static class ControllersConfiguration
         services
             .AddControllers(
             options => options.Filters.Add(typeof(ApiGlobalExceptionFilter))
-            )   
+            )
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCasePolicy();
@@ -36,7 +38,7 @@ public static class ControllersConfiguration
                 Description = "Enter the JWT token like this: Bearer {your token}",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
-                Scheme = "bearer", 
+                Scheme = "bearer",
                 BearerFormat = "JWT",
                 Reference = new OpenApiReference
                 {
@@ -49,6 +51,12 @@ public static class ControllersConfiguration
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {securityScheme, new string[] {} }
+            });
+
+            options.MapType<Category>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Enum = Enum.GetNames(typeof(Category)).Select(name => new OpenApiString(name)).Cast<IOpenApiAny>().ToList()
             });
         });
         return services;
@@ -66,5 +74,4 @@ public static class ControllersConfiguration
         }
         return app;
     }
-
 }
