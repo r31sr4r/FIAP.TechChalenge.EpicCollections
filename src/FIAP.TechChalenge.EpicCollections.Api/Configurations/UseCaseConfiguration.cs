@@ -24,6 +24,7 @@ public static class UseCaseConfiguration
        )
     {
         services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<ICollectionRepository, CollectionRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         return services;
     }

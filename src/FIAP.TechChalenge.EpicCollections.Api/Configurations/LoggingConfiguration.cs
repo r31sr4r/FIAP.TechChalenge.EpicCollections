@@ -8,7 +8,7 @@ namespace FIAP.TechChalenge.EpicCollections.Api.Configurations
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
-                .WriteTo.File("logs/investnethub.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File("logs/epicollections.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             host.UseSerilog();

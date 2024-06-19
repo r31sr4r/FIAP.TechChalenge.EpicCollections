@@ -34,4 +34,5 @@ namespace FIAP.TechChalenge.EpicCollections.Api.Configurations
             return services;
         }
     }
+
 }

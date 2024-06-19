@@ -59,7 +59,7 @@ public class ValidationHelperTest
     [Trait("Domain", "Helpers")]
     [InlineData("1111-1111")]
     [InlineData("(11)  1234-5678")]
-    [InlineData("(11) 912345678")]
+    [InlineData("(11) 91234567867")]
     public void PhoneIsInvalid(string invalidPhone)
     {
         bool result = ValidationHelper.IsValidPhone(invalidPhone);

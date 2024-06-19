@@ -1,8 +1,5 @@
 ﻿using Bogus.Extensions.Brazil;
-using FIAP.TechChalenge.EpicCollections.Api.Configurations.Policies;
 using FIAP.TechChalenge.EpicCollections.E2ETests.Base;
-using System.Text;
-using System.Text.Json;
 using DomainEntity = FIAP.TechChalenge.EpicCollections.Domain.Entity;
 
 namespace FIAP.TechChalenge.EpicCollections.E2ETests.Api.User.Common;
