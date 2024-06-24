@@ -16,7 +16,8 @@ public class UpdateCollectionApiTestFixture : CollectionBaseFixture
             collection.Id,
             collection.Name,
             collection.Description,
-            collection.Category
+            collection.Category,
+            userId
         );
     }
 }

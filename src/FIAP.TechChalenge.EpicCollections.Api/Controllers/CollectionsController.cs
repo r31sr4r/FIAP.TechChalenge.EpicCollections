@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FIAP.TechChalenge.EpicCollections.Api.Extensions;
+using FIAP.TechChalenge.EpicCollections.Api.Filters;
 
 namespace FIAP.TechChalenge.EpicCollections.Api.Controllers;
 
@@ -36,19 +37,16 @@ public class CollectionsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<CollectionModelOutput>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ServiceFilter(typeof(ValidateUserIdFilter))]
     public async Task<IActionResult> Create(
         [FromBody] CreateCollectionApiInput apiInput,
         CancellationToken cancellationToken
     )
     {
-        var userId = User.GetUserId();
-        if (userId == null)
-        {
-            return Forbid();
-        }
+        var userId = (Guid)HttpContext.Items["UserId"]!;
 
         var input = new CreateCollectionInput(
-            userId.Value,
+            userId,
             apiInput.Name,
             apiInput.Description,
             apiInput.Category
@@ -82,13 +80,16 @@ public class CollectionsController : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ServiceFilter(typeof(ValidateUserIdFilter))]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid id,
         CancellationToken cancellationToken
     )
     {
+        var userId = (Guid)HttpContext.Items["UserId"]!;
+
         await _mediator.Send(
-            new DeleteCollectionInput(id),
+            new DeleteCollectionInput(id, userId),
             cancellationToken
         );
 
@@ -100,17 +101,21 @@ public class CollectionsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ServiceFilter(typeof(ValidateUserIdFilter))]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
         [FromBody] UpdateCollectionApiInput apiInput,
         CancellationToken cancellationToken
     )
     {
+        var userId = (Guid)HttpContext.Items["UserId"]!;
+
         var input = new UpdateCollectionInput(
             id,
             apiInput.Name,
             apiInput.Description,
-            apiInput.Category
+            apiInput.Category,
+            userId
         );
         var result = await _mediator.Send(input, cancellationToken);
         return Ok(new ApiResponse<CollectionModelOutput>(result));

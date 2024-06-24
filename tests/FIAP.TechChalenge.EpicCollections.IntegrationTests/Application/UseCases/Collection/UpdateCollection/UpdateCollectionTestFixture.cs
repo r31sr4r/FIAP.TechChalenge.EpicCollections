@@ -12,12 +12,13 @@ public class UpdateCollectionTestFixtureCollection
 public class UpdateCollectionTestFixture
     : CollectionUseCasesBaseFixture
 {
-    public UpdateCollectionInput GetValidInput(Guid? id = null)
+    public UpdateCollectionInput GetValidInput(Guid? id = null, Guid? userId = null)
         => new UpdateCollectionInput(
                 id ?? Guid.NewGuid(),
                 GetValidName(),
                 GetValidDescription(),
-                GetValidCategory()
+                GetValidCategory(),
+                userId ?? Guid.NewGuid()
     );
 
     public UpdateCollectionInput GetInvalidInputShortName()

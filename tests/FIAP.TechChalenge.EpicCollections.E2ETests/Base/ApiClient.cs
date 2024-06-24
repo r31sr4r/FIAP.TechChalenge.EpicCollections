@@ -5,8 +5,10 @@ using System.Text.Json;
 using FIAP.TechChalenge.EpicCollections.Api.ApiModels.User;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
+using System.Text.Json.Serialization;
 
 namespace FIAP.TechChalenge.EpicCollections.E2ETests.Base;
+
 public class ApiClient
 {
     private readonly HttpClient _httpClient;
@@ -19,7 +21,8 @@ public class ApiClient
         _defaultSerializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = new JsonSnakeCasePolicy(),
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
         };
     }
 
@@ -36,7 +39,12 @@ public class ApiClient
 
         var responseBody = await response.Content.ReadAsStringAsync();
         var authResponse = JsonSerializer.Deserialize<AuthResponse>(responseBody, _defaultSerializerOptions);
-        _token = authResponse.Token;
+        SetToken(authResponse!.Token);
+    }
+
+    public void SetToken(string token)
+    {
+        _token = token;
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
     }
 
@@ -66,19 +74,18 @@ public class ApiClient
         return (response, output);
     }
 
-
-    public async Task<(HttpResponseMessage?, TOutupt?)> Get<TOutupt>(
+    public async Task<(HttpResponseMessage?, TOutput?)> Get<TOutput>(
         string route,
         object? queryStringParametersObject = null
     )
-    where TOutupt : class
+    where TOutput : class
     {
         var url = PrepareGetRoute(route, queryStringParametersObject);
         var response = await _httpClient.GetAsync(
                 url
             );
 
-        var output = await GetOutput<TOutupt>(response);
+        var output = await GetOutput<TOutput>(response);
 
         return (response, output);
     }
@@ -118,39 +125,41 @@ public class ApiClient
         return (response, output);
     }
 
-
-    public async Task<(HttpResponseMessage?, TOutupt?)> Put<TOutupt>(
+    public async Task<(HttpResponseMessage?, TOutput?)> Put<TOutput>(
         string route,
         object payload
     )
-        where TOutupt : class
+        where TOutput : class
     {
-        var response = await _httpClient.PutAsync(
-                route,
-                new StringContent(
-                    JsonSerializer.Serialize(
-                        payload,
-                        _defaultSerializerOptions
-                    ),
-                    Encoding.UTF8,
-                    "application/json"
-                )
-        );
+        var request = new HttpRequestMessage(HttpMethod.Put, route)
+        {
+            Content = new StringContent(
+                JsonSerializer.Serialize(payload, _defaultSerializerOptions),
+                Encoding.UTF8,
+                "application/json"
+            )
+        };
 
-        var output = await GetOutput<TOutupt>(response);
+        if (!string.IsNullOrEmpty(_token))
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+        }
 
+        var response = await _httpClient.SendAsync(request);
+
+        var output = await GetOutput<TOutput>(response);
         return (response, output);
     }
 
-    private async Task<TOutupt?> GetOutput<TOutupt>(HttpResponseMessage response)
-        where TOutupt : class
+    private async Task<TOutput?> GetOutput<TOutput>(HttpResponseMessage response)
+        where TOutput : class
     {
         var outputString = await response.Content.ReadAsStringAsync();
-        TOutupt? output = null;
+        TOutput? output = null;
 
         if (!string.IsNullOrWhiteSpace(outputString))
         {
-            output = JsonSerializer.Deserialize<TOutupt>(
+            output = JsonSerializer.Deserialize<TOutput>(
                 outputString,
                 _defaultSerializerOptions
             );
@@ -159,4 +168,3 @@ public class ApiClient
         return output;
     }
 }
-

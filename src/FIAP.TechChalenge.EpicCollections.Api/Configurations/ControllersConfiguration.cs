@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using FIAP.TechChalenge.EpicCollections.Api.Configurations.Policies;
 using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
+using System.Text.Json.Serialization;
 
 namespace FIAP.TechChalenge.EpicCollections.Api.Configurations;
 
@@ -15,12 +16,15 @@ public static class ControllersConfiguration
     {
         services
             .AddControllers(
-            options => options.Filters.Add(typeof(ApiGlobalExceptionFilter))
+                options => options.Filters.Add(typeof(ApiGlobalExceptionFilter))
             )
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCasePolicy();
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
+        services.AddScoped<ValidateUserIdFilter>();
         services.AddDocumentation();
         return services;
     }
@@ -61,7 +65,6 @@ public static class ControllersConfiguration
         });
         return services;
     }
-
 
     public static WebApplication UseDocumentation(
         this WebApplication app

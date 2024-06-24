@@ -38,9 +38,10 @@ public class UpdateCollectionTest
                         It.IsAny<CancellationToken>())
                ).ReturnsAsync(collectionExample);
         var useCase = new UseCases.UpdateCollection
-            (repositoryMock.Object,
-                       unitOfWorkMock.Object
-                              );
+                        (
+                            repositoryMock.Object,
+                            unitOfWorkMock.Object
+                        );
 
         CollectionModelOutput output = await useCase.Handle(input, CancellationToken.None);
 
@@ -111,6 +112,7 @@ public class UpdateCollectionTest
     {
         var collection = _fixture.GetValidCollection();
         input.Id = collection.Id;
+        input.UserId = collection.UserId;
         var repositoryMock = _fixture.GetRepositoryMock();
         var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
         repositoryMock.Setup(repository => repository.Get(
@@ -133,6 +135,58 @@ public class UpdateCollectionTest
                 collection.Id,
                 It.IsAny<CancellationToken>()
                 ), Times.Once
+        );
+    }
+
+    [Fact(DisplayName = nameof(ThrowWhenNotOwner))]
+    [Trait("Application", "UpdateCollection - Use Cases")]
+    public async Task ThrowWhenNotOwner()
+    {
+        var repositoryMock = _fixture.GetRepositoryMock();
+        var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
+        var collectionExample = _fixture.GetValidCollection();
+        var differentUserId = Guid.NewGuid();
+        var input = new UpdateCollectionInput(
+            collectionExample.Id,
+            "Updated Name",
+            "Updated Description",
+            collectionExample.Category,
+            differentUserId
+        );
+
+        repositoryMock.Setup(repository => repository.Get(
+                    collectionExample.Id,
+                    It.IsAny<CancellationToken>())
+        ).ReturnsAsync(collectionExample);
+        var useCase = new UseCases.UpdateCollection
+            (repositoryMock.Object,
+            unitOfWorkMock.Object
+        );
+
+        var task = async ()
+            => await useCase.Handle(input, CancellationToken.None);
+
+        await task.Should().ThrowAsync<UnauthorizedAccessException>()
+            .WithMessage("You are not the owner of this collection.");
+
+        repositoryMock.Verify(
+            repository => repository.Get(
+                collectionExample.Id,
+                It.IsAny<CancellationToken>()
+            ), Times.Once
+        );
+
+        repositoryMock.Verify(
+            repository => repository.Update(
+                It.IsAny<DomainEntity.Collection>(),
+                It.IsAny<CancellationToken>()
+            ), Times.Never
+        );
+
+        unitOfWorkMock.Verify(
+            unitOfWork => unitOfWork.Commit(
+                It.IsAny<CancellationToken>()
+            ), Times.Never
         );
     }
 }

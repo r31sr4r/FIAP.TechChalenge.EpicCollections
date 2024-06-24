@@ -19,6 +19,10 @@ public class UpdateCollection
     public async Task<CollectionModelOutput> Handle(UpdateCollectionInput request, CancellationToken cancellationToken)
     {
         var collection = await _collectionRepository.Get(request.Id, cancellationToken);
+
+        if (collection.UserId != request.UserId)
+            throw new UnauthorizedAccessException("You are not the owner of this collection.");
+
         collection.Update(
             request.Name,
             request.Description,

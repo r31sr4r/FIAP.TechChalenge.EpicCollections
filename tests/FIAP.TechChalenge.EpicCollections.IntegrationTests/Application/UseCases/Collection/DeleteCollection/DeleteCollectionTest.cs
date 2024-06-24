@@ -36,7 +36,7 @@ public class DeleteCollectionTest
         dbContext.SaveChanges();
         tracking.State = EntityState.Detached;
         var useCase = new UseCase.DeleteCollection(repository, unitOfWork);
-        var input = new UseCase.DeleteCollectionInput(collectionExample.Id);
+        var input = new UseCase.DeleteCollectionInput(collectionExample.Id, userId);
 
         await useCase.Handle(input, CancellationToken.None);
 
@@ -58,7 +58,7 @@ public class DeleteCollectionTest
         dbContext.Add(collectionExample);
         dbContext.SaveChanges();
         var collectionRepository = new CollectionRepository(dbContext);
-        var input = new UseCase.DeleteCollectionInput(Guid.NewGuid());
+        var input = new UseCase.DeleteCollectionInput(Guid.NewGuid(), userId);
         var useCase = new UseCase.DeleteCollection(collectionRepository, unitOfWork);
 
         var task = async () => await useCase.Handle(input, CancellationToken.None);
@@ -66,4 +66,40 @@ public class DeleteCollectionTest
         await task.Should().ThrowAsync<NotFoundException>()
             .WithMessage($"Collection with id {input.Id} not found");
     }
+
+    [Fact(DisplayName = nameof(ThrowWhenNotOwner))]
+    [Trait("Integration/Application", "DeleteCollection - Use Cases")]
+    public async Task ThrowWhenNotOwner()
+    {
+        var dbContext = _fixture.CreateDbContext();
+        var userId = Guid.NewGuid();
+        var differentUserId = Guid.NewGuid();
+        var exampleCollections = _fixture.GetCollectionsList(userId, 10);
+        var collectionExample = exampleCollections.First();
+        await dbContext.AddRangeAsync(exampleCollections);
+        dbContext.SaveChanges();
+        var repository = new CollectionRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
+        var useCase = new UseCase.DeleteCollection(repository, unitOfWork);
+
+        var input = new UseCase.DeleteCollectionInput(
+            collectionExample.Id,
+            differentUserId
+        );
+
+        var task = async ()
+            => await useCase.Handle(input, CancellationToken.None);
+
+        await task.Should().ThrowAsync<UnauthorizedAccessException>()
+            .WithMessage("You are not the owner of this collection.");
+
+        var dbCollection = await (_fixture.CreateDbContext(true))
+            .Collections.FindAsync(collectionExample.Id);
+
+        dbCollection.Should().NotBeNull();
+        dbCollection!.Name.Should().Be(collectionExample.Name);
+        dbCollection.Description.Should().Be(collectionExample.Description);
+        dbCollection.Category.Should().Be(collectionExample.Category);
+    }
+
 }

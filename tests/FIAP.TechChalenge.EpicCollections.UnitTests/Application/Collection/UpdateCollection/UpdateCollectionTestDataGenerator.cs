@@ -7,7 +7,7 @@ public class UpdateCollectionTestDataGenerator
         for (int indice = 0; indice < times; indice++)
         {
             var exampleCollection = fixture.GetValidCollection();
-            var exampleInput = fixture.GetValidInput(exampleCollection.Id);
+            var exampleInput = fixture.GetValidInput(exampleCollection.Id, exampleCollection.UserId);
             yield return new object[] { exampleCollection, exampleInput };
         }
     }

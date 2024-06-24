@@ -10,6 +10,7 @@ using FIAP.TechChalenge.EpicCollections.Domain.Exceptions;
 using FIAP.TechChalenge.EpicCollections.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Application.UseCases.Collection.UpdateCollection;
 
@@ -99,6 +100,7 @@ public class UpdateCollectionTest
         var unitOfWork = new UnitOfWork(dbContext);
         var useCase = new UseCase.UpdateCollection(repository, unitOfWork);
         input.Id = exampleCollections[0].Id;
+        input.UserId = exampleCollections[0].UserId;
 
         var task = async ()
             => await useCase.Handle(input, CancellationToken.None);
@@ -107,4 +109,44 @@ public class UpdateCollectionTest
             .ThrowAsync<EntityValidationException>()
             .WithMessage(expectedMessage);
     }
+
+    [Fact(DisplayName = nameof(ThrowWhenNotOwner))]
+    [Trait("Integration/Application", "UpdateCollection - Use Cases")]
+    public async Task ThrowWhenNotOwner()
+    {
+        var dbContext = _fixture.CreateDbContext();
+        var exampleCollections = _fixture.GetCollectionsList();
+        var collectionExample = exampleCollections.First();
+        var differentUserId = Guid.NewGuid();
+        await dbContext.AddRangeAsync(exampleCollections);
+        dbContext.SaveChanges();
+
+        var repository = new CollectionRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
+        var useCase = new UseCase.UpdateCollection(repository, unitOfWork);
+
+        var input = new UpdateCollectionInput(
+            collectionExample.Id,
+            "Updated Name",
+            "Updated Description",
+            collectionExample.Category,
+            differentUserId
+        );
+
+        var task = async ()
+            => await useCase.Handle(input, CancellationToken.None);
+
+        await task.Should().ThrowAsync<UnauthorizedAccessException>()
+            .WithMessage("You are not the owner of this collection.");
+
+        var dbCollection = await (_fixture.CreateDbContext(true))
+            .Collections.FindAsync(collectionExample.Id);
+
+        dbCollection.Should().NotBeNull();
+        dbCollection!.Name.Should().NotBe(input.Name);
+        dbCollection.Description.Should().NotBe(input.Description);
+        dbCollection.Category.Should().Be(collectionExample.Category);
+    }
+
+
 }

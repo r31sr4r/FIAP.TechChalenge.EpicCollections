@@ -68,6 +68,32 @@ public class DeleteCollectionApiTest : IAsyncLifetime, IDisposable
         output.Type.Should().Be("NotFound");
     }
 
+    [Fact(DisplayName = nameof(ErrorWhenNotOwner))]
+    [Trait("E2E/Api", "Collection/Delete - Endpoints")]
+    public async Task ErrorWhenNotOwner()
+    {
+        var exampleCollectionsList = _fixture.GetCollectionsList(_fixture.AuthenticatedUser.Id, 20);
+        await _fixture.Persistence.InsertList(exampleCollectionsList);
+        var exampleCollection = exampleCollectionsList[10];
+
+        var differentUser = _fixture.GetValidUser();
+        await _fixture.Persistence.InsertUser(differentUser);
+        await _fixture.ApiClient.AuthenticateAsync(differentUser.Email, "ValidPassword123!");
+
+        var (response, output) = await _fixture
+            .ApiClient
+            .Delete<ProblemDetails>($"/collections/{exampleCollection.Id}");
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status403Forbidden);
+        output.Should().NotBeNull();
+        output!.Status.Should().Be((int)StatusCodes.Status403Forbidden);
+        output.Title.Should().Be("Forbidden");
+        output.Detail.Should().Be("You are not the owner of this collection.");
+        output.Type.Should().Be("Forbidden");
+    }
+
+
     public void Dispose()
         => _fixture.CleanPersistence();
 }

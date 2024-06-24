@@ -47,6 +47,13 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
             details.Type = "Unauthorized";
             details.Detail = exception.Message;
         }
+        else if (exception is UnauthorizedAccessException)
+        {
+            details.Title = "Forbidden";
+            details.Status = StatusCodes.Status403Forbidden;
+            details.Type = "Forbidden";
+            details.Detail = exception.Message;
+        }
         else
         {
             details.Title = "An error occurred while processing your request";

@@ -14,6 +14,8 @@ public class DeleteCollection : IDeleteCollection
     public async Task<Unit> Handle(DeleteCollectionInput request, CancellationToken cancellationToken)
     {
         var collection = await _collectionRepository.Get(request.Id, cancellationToken);
+        if (collection.UserId != request.UserId)
+            throw new UnauthorizedAccessException("You are not the owner of this collection.");
         await _collectionRepository.Delete(collection, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
         return Unit.Value;

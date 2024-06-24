@@ -78,6 +78,33 @@ public class UpdateCollectionApiTest : IAsyncLifetime, IDisposable
         output.Type.Should().Be("NotFound");
     }
 
+    [Fact(DisplayName = nameof(ErrorWhenNotOwner))]
+    [Trait("E2E/Api", "Collection/Update - Endpoints")]
+    public async Task ErrorWhenNotOwner()
+    {
+        var differentUser = _fixture.GetValidUser();
+        await _fixture.Persistence.InsertUser(differentUser);
+        await _fixture.ApiClient.AuthenticateAsync(differentUser.Email, "ValidPassword123!");
+
+        var exampleCollectionsList = _fixture.GetCollectionsList(_fixture.AuthenticatedUser.Id, 20);
+        await _fixture.Persistence.InsertList(exampleCollectionsList);
+        var exampleCollection = exampleCollectionsList[10];
+        var collectionModelInput = _fixture.GetInput(_fixture.AuthenticatedUser.Id);
+
+        var (response, output) = await _fixture
+            .ApiClient
+            .Put<ProblemDetails>(
+            $"/collections/{exampleCollection.Id}",
+            collectionModelInput
+        );
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        output.Should().NotBeNull();
+        output!.Title.Should().Be("Forbidden");
+    }
+
+
     public void Dispose()
         => _fixture.CleanPersistence();
 }
