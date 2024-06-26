@@ -1,6 +1,6 @@
 ﻿using Bogus.Extensions.Brazil;
 using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
-using FIAP.TechChalenge.EpicCollections.Domain.Entity;
+using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
 using FIAP.TechChalenge.EpicCollections.IntegrationTests.Base;
 

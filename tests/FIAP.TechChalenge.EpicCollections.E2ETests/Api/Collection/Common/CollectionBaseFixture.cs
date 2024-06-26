@@ -96,7 +96,7 @@ public class CollectionBaseFixture : BaseFixture
 
     public Category GetValidCategory() => Faker.PickRandom<Category>();
 
-    public DomainEntity.Collection GetValidCollection(Guid userId)
+    public DomainEntity.Collection.Collection GetValidCollection(Guid userId)
         => new(
             userId,
             GetValidCollectionName(),
@@ -104,7 +104,7 @@ public class CollectionBaseFixture : BaseFixture
             GetValidCategory()
         );
 
-    public List<DomainEntity.Collection> GetCollectionsList(Guid userId, int length = 10)
+    public List<DomainEntity.Collection.Collection> GetCollectionsList(Guid userId, int length = 10)
     {
         return Enumerable.Range(1, length)
             .Select(_ => GetValidCollection(userId))

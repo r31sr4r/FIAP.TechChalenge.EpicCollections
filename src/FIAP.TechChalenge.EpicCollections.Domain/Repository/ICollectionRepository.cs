@@ -1,6 +1,6 @@
 ﻿using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork;
-using FIAP.TechChalenge.EpicCollections.Domain.Entity;
+using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 
 namespace FIAP.TechChalenge.EpicCollections.Domain.Repository;
 public interface ICollectionRepository

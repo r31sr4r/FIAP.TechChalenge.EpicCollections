@@ -35,7 +35,7 @@ public class CreateCollectionTest
 
         repositoryMock.Verify(
             repository => repository.Insert(
-                It.IsAny<DomainEntity.Collection>(),
+                It.IsAny<DomainEntity.Collection.Collection>(),
                 It.IsAny<CancellationToken>()
             ),
             Times.Once

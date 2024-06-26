@@ -24,10 +24,10 @@ public class ListCollectionsTest
         var collectionsList = _fixture.GetCollectionsList();
         var repositoryMock = _fixture.GetRepositoryMock();
         var input = _fixture.GetInput();
-        var outputRepositorySearch = new SearchOutput<DomainEntity.Collection>(
+        var outputRepositorySearch = new SearchOutput<DomainEntity.Collection.Collection>(
             currentPage: input.Page,
             perPage: input.PerPage,
-            items: (IReadOnlyList<DomainEntity.Collection>)collectionsList,
+            items: (IReadOnlyList<DomainEntity.Collection.Collection>)collectionsList,
             total: new Random().Next(50, 200)
         );
         repositoryMock.Setup(x => x.Search(
@@ -86,10 +86,10 @@ public class ListCollectionsTest
     {
         var collectionsList = _fixture.GetCollectionsList();
         var repositoryMock = _fixture.GetRepositoryMock();
-        var outputRepositorySearch = new SearchOutput<DomainEntity.Collection>(
+        var outputRepositorySearch = new SearchOutput<DomainEntity.Collection.Collection>(
             currentPage: input.Page,
             perPage: input.PerPage,
-            items: (IReadOnlyList<DomainEntity.Collection>)collectionsList,
+            items: (IReadOnlyList<DomainEntity.Collection.Collection>)collectionsList,
             total: new Random().Next(50, 200)
         );
         repositoryMock.Setup(x => x.Search(
@@ -143,10 +143,10 @@ public class ListCollectionsTest
         var collectionsList = _fixture.GetCollectionsList();
         var input = _fixture.GetInput();
         var repositoryMock = _fixture.GetRepositoryMock();
-        var outputRepositorySearch = new SearchOutput<DomainEntity.Collection>(
+        var outputRepositorySearch = new SearchOutput<DomainEntity.Collection.Collection>(
             currentPage: input.Page,
             perPage: input.PerPage,
-            items: new List<DomainEntity.Collection>().AsReadOnly(),
+            items: new List<DomainEntity.Collection.Collection>().AsReadOnly(),
             total: 0
         );
         repositoryMock.Setup(x => x.Search(

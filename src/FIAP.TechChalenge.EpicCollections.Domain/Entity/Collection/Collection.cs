@@ -1,27 +1,27 @@
 ﻿using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
 using FIAP.TechChalenge.EpicCollections.Domain.Exceptions;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace FIAP.TechChalenge.EpicCollections.Domain.Entity
+namespace FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection
 {
     public class Collection : AggregateRoot
     {
-        public Collection()
-        {
-        }
+        private readonly List<CollectionItem> _items;
 
         public Collection(
             Guid userId,
             string name,
             string description,
-            Category category
-        ) : base()
+            Category category) : base()
         {
             UserId = userId;
             Name = name;
             Description = description;
             Category = category;
             CreatedAt = DateTime.Now;
+            _items = new List<CollectionItem>();
 
             Validate();
         }
@@ -32,6 +32,30 @@ namespace FIAP.TechChalenge.EpicCollections.Domain.Entity
         public Category Category { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
+        public IReadOnlyCollection<CollectionItem> Items => _items.AsReadOnly();
+
+        public void AddItem(CollectionItem item)
+        {
+            _items.Add(item);
+        }
+
+        public void RemoveItem(Guid itemId)
+        {
+            var item = _items.FirstOrDefault(i => i.Id == itemId);
+            if (item == null)
+                throw new EntityNotFoundException($"Item with id {itemId} not found");
+
+            _items.Remove(item);
+        }
+
+        public void UpdateItem(Guid itemId, string name, string description, DateTime acquisitionDate, decimal value, string photoUrl)
+        {
+            var item = _items.FirstOrDefault(i => i.Id == itemId);
+            if (item == null)
+                throw new EntityNotFoundException($"Item with id {itemId} not found");
+
+            item.Update(name, description, acquisitionDate, value, photoUrl);
+        }
 
         public void Update(string name, string description, Category category)
         {

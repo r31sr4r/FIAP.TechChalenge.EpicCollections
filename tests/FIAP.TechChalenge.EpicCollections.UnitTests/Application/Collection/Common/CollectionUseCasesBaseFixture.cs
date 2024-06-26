@@ -47,7 +47,7 @@ public class CollectionUseCasesBaseFixture : BaseFixture
         return Faker.PickRandom<Category>();
     }
 
-    public DomainEntity.Collection GetValidCollection(Guid? userId = null)
+    public DomainEntity.Collection.Collection GetValidCollection(Guid? userId = null)
         => new(
             userId ?? Guid.NewGuid(),
             GetValidCollectionName(),
@@ -55,7 +55,7 @@ public class CollectionUseCasesBaseFixture : BaseFixture
             GetValidCategory()
         );
 
-    public List<DomainEntity.Collection> GetCollectionsList(Guid? userId = null, int length = 10)
+    public List<DomainEntity.Collection.Collection> GetCollectionsList(Guid? userId = null, int length = 10)
     {
         var actualUserId = userId ?? Guid.NewGuid();
         return Enumerable.Range(1, length)

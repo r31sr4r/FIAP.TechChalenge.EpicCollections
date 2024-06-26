@@ -1,5 +1,5 @@
 ﻿using FIAP.TechChalenge.EpicCollections.Application.Exceptions;
-using FIAP.TechChalenge.EpicCollections.Domain.Entity;
+using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 using FIAP.TechChalenge.EpicCollections.Domain.Repository;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
 using Microsoft.EntityFrameworkCore;

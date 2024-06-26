@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using FIAP.TechChalenge.EpicCollections.Domain.Entity;
+using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 
 namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Configurations
 {

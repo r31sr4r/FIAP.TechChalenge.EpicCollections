@@ -15,9 +15,9 @@ public class ListCollectionsTestFixtureCollection
 public class ListCollectionsTestFixture
     : CollectionUseCasesBaseFixture
 {
-    public List<DomainEntity.Collection> GetCollectionsList(int length = 10)
+    public List<DomainEntity.Collection.Collection> GetCollectionsList(int length = 10)
     {
-        var list = new List<DomainEntity.Collection>();
+        var list = new List<DomainEntity.Collection.Collection>();
         var userId = Guid.NewGuid();
         for (int i = 0; i < length; i++)
         {
@@ -38,9 +38,9 @@ public class ListCollectionsTestFixture
         );
     }
 
-    public SearchOutput<DomainEntity.Collection> GetSearchOutput(List<DomainEntity.Collection> items)
+    public SearchOutput<DomainEntity.Collection.Collection> GetSearchOutput(List<DomainEntity.Collection.Collection> items)
     {
-        return new SearchOutput<DomainEntity.Collection>(
+        return new SearchOutput<DomainEntity.Collection.Collection>(
             currentPage: 1,
             perPage: items.Count,
             total: items.Count,

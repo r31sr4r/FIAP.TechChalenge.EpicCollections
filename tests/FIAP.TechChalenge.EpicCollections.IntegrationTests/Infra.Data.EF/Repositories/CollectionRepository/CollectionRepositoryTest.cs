@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using FIAP.TechChalenge.EpicCollections.Application.Exceptions;
-using FIAP.TechChalenge.EpicCollections.Domain.Entity;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
 using FIAP.TechChalenge.EpicCollections.Infra.Data.EF;
 using Repository = FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories;
+using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 
 namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repositories.CollectionRepository
 {

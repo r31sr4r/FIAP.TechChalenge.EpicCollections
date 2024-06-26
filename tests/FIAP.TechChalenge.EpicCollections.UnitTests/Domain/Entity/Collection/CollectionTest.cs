@@ -25,8 +25,8 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
             Category = Category.ActionFigures
         };
 
-        private DomainEntity.Collection CreateCollection(CollectionData data) =>
-            new DomainEntity.Collection(
+        private DomainEntity.Collection.Collection CreateCollection(CollectionData data) =>
+            new DomainEntity.Collection.Collection(
                 data.UserId,
                 data.Name!,
                 data.Description!,
@@ -69,7 +69,7 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
                 Category = Category.ActionFigures                
             };
 
-            Action action = () => new DomainEntity.Collection(
+            Action action = () => new DomainEntity.Collection.Collection(
                 data.UserId,
                 data.Name!,
                 data.Description,

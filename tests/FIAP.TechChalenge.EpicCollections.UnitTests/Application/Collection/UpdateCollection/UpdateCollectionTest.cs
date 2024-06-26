@@ -27,7 +27,7 @@ public class UpdateCollectionTest
         MemberType = typeof(UpdateCollectionTestDataGenerator)
     )]
     public async Task UpdateCollection(
-        DomainEntity.Collection collectionExample,
+        DomainEntity.Collection.Collection collectionExample,
         UpdateCollectionInput input
     )
     {
@@ -178,7 +178,7 @@ public class UpdateCollectionTest
 
         repositoryMock.Verify(
             repository => repository.Update(
-                It.IsAny<DomainEntity.Collection>(),
+                It.IsAny<DomainEntity.Collection.Collection>(),
                 It.IsAny<CancellationToken>()
             ), Times.Never
         );

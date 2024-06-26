@@ -11,13 +11,13 @@ public class CollectionPersistence
     public CollectionPersistence(EpicCollectionsDbContext context)
         => _context = context;
 
-    public async Task<DomainEntity.Collection?> GetById(Guid id)
+    public async Task<DomainEntity.Collection.Collection?> GetById(Guid id)
         => await _context
             .Collections
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task InsertList(List<DomainEntity.Collection> collections)
+    public async Task InsertList(List<DomainEntity.Collection.Collection> collections)
     {
         await _context.Collections.AddRangeAsync(collections);
         await _context.SaveChangesAsync();

@@ -20,7 +20,7 @@ public class CreateCollection : ICreateCollection
 
     public async Task<CollectionModelOutput> Handle(CreateCollectionInput request, CancellationToken cancellationToken)
     {
-        var collection = new DomainEntity.Collection(
+        var collection = new DomainEntity.Collection.Collection(
             request.UserId,
             request.Name,
             request.Description,

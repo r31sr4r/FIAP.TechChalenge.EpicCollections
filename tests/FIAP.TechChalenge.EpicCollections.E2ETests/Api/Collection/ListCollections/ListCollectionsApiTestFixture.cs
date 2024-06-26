@@ -10,21 +10,21 @@ public class ListCollectionsApiTestFixtureCollection : ICollectionFixture<ListCo
 
 public class ListCollectionsApiTestFixture : CollectionBaseFixture
 {
-    public List<DomainEntity.Collection> GetExampleCollectionsListWithNames(Guid userId, List<string> names)
-        => names.Select(name => new DomainEntity.Collection(
+    public List<DomainEntity.Collection.Collection> GetExampleCollectionsListWithNames(Guid userId, List<string> names)
+        => names.Select(name => new DomainEntity.Collection.Collection(
             userId,
             name,
             GetValidDescription(),
             GetValidCategory()
         )).ToList();
 
-    public List<DomainEntity.Collection> SortList(
-        List<DomainEntity.Collection> collectionsList,
+    public List<DomainEntity.Collection.Collection> SortList(
+        List<DomainEntity.Collection.Collection> collectionsList,
         string orderBy,
         SearchOrder order
     )
     {
-        var listClone = new List<DomainEntity.Collection>(collectionsList);
+        var listClone = new List<DomainEntity.Collection.Collection>(collectionsList);
         var orderedEnumerable = (orderBy, order) switch
         {
             ("name", SearchOrder.Asc) => listClone.OrderBy(x => x.Name),

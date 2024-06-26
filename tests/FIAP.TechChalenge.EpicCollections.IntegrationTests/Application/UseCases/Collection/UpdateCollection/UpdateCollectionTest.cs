@@ -32,7 +32,7 @@ public class UpdateCollectionTest
         MemberType = typeof(UpdateCollectionTestDataGenerator)
     )]
     public async Task UpdateCollection(
-        DomainEntity.Collection collectionExample,
+        DomainEntity.Collection.Collection collectionExample,
         UpdateCollectionInput input
     )
     {

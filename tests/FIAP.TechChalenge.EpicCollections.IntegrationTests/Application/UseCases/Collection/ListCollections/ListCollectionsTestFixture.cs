@@ -15,10 +15,10 @@ public class ListCollectionsTestFixtureCollection
 public class ListCollectionsTestFixture
     : CollectionUseCasesBaseFixture
 {
-    public List<DomainEntity.Collection> GetExampleCollectionsListWithNames(List<string> names)
+    public List<DomainEntity.Collection.Collection> GetExampleCollectionsListWithNames(List<string> names)
     {
         var userId = Guid.NewGuid();
-        return names.Select(name => new DomainEntity.Collection(
+        return names.Select(name => new DomainEntity.Collection.Collection(
             userId,
             name,
             GetValidDescription(),
@@ -26,13 +26,13 @@ public class ListCollectionsTestFixture
         )).ToList();
     }
 
-    public List<DomainEntity.Collection> SortList(
-        List<DomainEntity.Collection> collectionsList,
+    public List<DomainEntity.Collection.Collection> SortList(
+        List<DomainEntity.Collection.Collection> collectionsList,
         string orderBy,
         SearchOrder order
     )
     {
-        var listClone = new List<DomainEntity.Collection>(collectionsList);
+        var listClone = new List<DomainEntity.Collection.Collection>(collectionsList);
         var orderedEnumerable = (orderBy, order) switch
         {
             ("name", SearchOrder.Asc) => listClone.OrderBy(x => x.Name).ToList(),

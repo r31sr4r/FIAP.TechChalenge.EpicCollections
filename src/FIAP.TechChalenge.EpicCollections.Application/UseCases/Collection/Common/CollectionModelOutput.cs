@@ -27,7 +27,7 @@ public class CollectionModelOutput
     public Category Category { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public static CollectionModelOutput FromCollection(Domain.Entity.Collection collection)
+    public static CollectionModelOutput FromCollection(Domain.Entity.Collection.Collection collection)
     {
         return new CollectionModelOutput(
             collection.Id,
