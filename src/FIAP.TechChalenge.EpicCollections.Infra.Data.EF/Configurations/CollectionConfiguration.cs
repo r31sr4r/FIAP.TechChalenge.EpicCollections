@@ -35,6 +35,11 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Configurations
                 .WithMany()
                 .HasForeignKey(collection => collection.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(c => c.Items)
+                .WithOne()
+                .HasForeignKey(ci => ci.CollectionId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

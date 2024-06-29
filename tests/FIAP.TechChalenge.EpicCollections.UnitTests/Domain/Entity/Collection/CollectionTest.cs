@@ -3,6 +3,7 @@ using Xunit;
 using FluentAssertions;
 using FIAP.TechChalenge.EpicCollections.Domain.Exceptions;
 using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
+using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 
 namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
 {
@@ -33,6 +34,16 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
                 data.Category
         );
 
+        private CollectionItem CreateValidItem(Guid collectionId) =>
+            new CollectionItem(
+                collectionId,
+                "Valid Item Name",
+                "Valid item description",
+                DateTime.Now,
+                100m,
+                "http://example.com/photo.jpg"
+            );
+
         [Fact(DisplayName = nameof(Instantiate))]
         [Trait("Domain", "Collection - Aggregates")]
         public void Instantiate()
@@ -52,8 +63,6 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
             collection.CreatedAt.Should().BeCloseTo(dateTimeAfter, TimeSpan.FromSeconds(1));
         }
 
-
-
         [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsEmpty))]
         [Trait("Domain", "Collection - Aggregates")]
         [InlineData("")]
@@ -66,7 +75,7 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
                 UserId = Guid.NewGuid(),
                 Name = name,
                 Description = "A collection of my favorite action figures.",
-                Category = Category.ActionFigures                
+                Category = Category.ActionFigures
             };
 
             Action action = () => new DomainEntity.Collection.Collection(
@@ -74,7 +83,7 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
                 data.Name!,
                 data.Description,
                 data.Category
-                );
+            );
 
             action.Should()
                 .Throw<EntityValidationException>()
@@ -177,6 +186,67 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Domain.Entity.Collection
             action.Should()
                 .Throw<EntityValidationException>()
                 .WithMessage("Name should be less than 255 characters");
+        }
+
+        [Fact(DisplayName = nameof(AddItem))]
+        [Trait("Domain", "Collection - Methods")]
+        public void AddItem()
+        {
+            var collection = CreateCollection(GetInitialData());
+            var item = CreateValidItem(collection.Id);
+
+            collection.AddItem(item);
+
+            collection.Items.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(item);
+        }
+
+        [Fact(DisplayName = nameof(RemoveItem))]
+        [Trait("Domain", "Collection - Methods")]
+        public void RemoveItem()
+        {
+            var collection = CreateCollection(GetInitialData());
+            var item = CreateValidItem(collection.Id);
+
+            collection.AddItem(item);
+            collection.RemoveItem(item.Id);
+
+            collection.Items.Should().BeEmpty();
+        }
+
+        [Fact(DisplayName = nameof(UpdateItem))]
+        [Trait("Domain", "Collection - Methods")]
+        public void UpdateItem()
+        {
+            var collection = CreateCollection(GetInitialData());
+            var item = CreateValidItem(collection.Id);
+
+            collection.AddItem(item);
+
+            var updatedData = new
+            {
+                Name = "Updated Item Name",
+                Description = "Updated item description",
+                AcquisitionDate = DateTime.Now,
+                Value = 200m,
+                PhotoUrl = "http://example.com/newphoto.jpg"
+            };
+
+            collection.UpdateItem(
+                item.Id,
+                updatedData.Name,
+                updatedData.Description,
+                updatedData.AcquisitionDate,
+                updatedData.Value,
+                updatedData.PhotoUrl
+            );
+
+            var updatedItem = collection.Items.First(i => i.Id == item.Id);
+            updatedItem.Name.Should().Be(updatedData.Name);
+            updatedItem.Description.Should().Be(updatedData.Description);
+            updatedItem.AcquisitionDate.Should().Be(updatedData.AcquisitionDate);
+            updatedItem.Value.Should().Be(updatedData.Value);
+            updatedItem.PhotoUrl.Should().Be(updatedData.PhotoUrl);
         }
     }
 }

@@ -9,6 +9,8 @@ public class EpicCollectionsDbContext
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Collection> Collections => Set<Collection>();
+    public DbSet<CollectionItem> CollectionItems => Set<CollectionItem>();
+
 
     public EpicCollectionsDbContext(
         DbContextOptions<EpicCollectionsDbContext> options)
@@ -18,5 +20,6 @@ public class EpicCollectionsDbContext
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new CollectionConfiguration());
+        modelBuilder.ApplyConfiguration(new CollectionItemConfiguration());
     }
 }

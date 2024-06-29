@@ -17,14 +17,20 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
         }
 
         public async Task Insert(Collection aggregate, CancellationToken cancellationToken)
-            => await _collections.AddAsync(aggregate, cancellationToken);
+        {
+            await _collections.AddAsync(aggregate, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
 
         public async Task<Collection> Get(Guid id, CancellationToken cancellationToken)
         {
-            var collection = await _collections.AsNoTracking().FirstOrDefaultAsync(
-                x => x.Id == id,
-                cancellationToken
-            );
+            var collection = await _collections
+                .Include(c => c.Items)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    x => x.Id == id,
+                    cancellationToken
+                );
             NotFoundException.ThrowIfNull(collection, $"Collection with id {id} not found");
             return collection!;
         }
@@ -85,8 +91,10 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
         public async Task<IReadOnlyList<Collection>> GetCollectionsByUserId(Guid userId, CancellationToken cancellationToken)
         {
             return await _collections
+                .Include(c => c.Items)
                 .Where(c => c.UserId == userId)
                 .ToListAsync(cancellationToken);
         }
     }
+
 }

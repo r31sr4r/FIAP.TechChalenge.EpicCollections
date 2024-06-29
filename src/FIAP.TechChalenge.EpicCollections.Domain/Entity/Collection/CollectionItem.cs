@@ -6,12 +6,14 @@ namespace FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection
     public class CollectionItem : EntityBase.Entity
     {
         public CollectionItem(
+            Guid collectionId,
             string name,
             string description,
             DateTime acquisitionDate,
             decimal value,
             string photoUrl = null)
         {
+            CollectionId = collectionId;
             Name = name;
             Description = description;
             AcquisitionDate = acquisitionDate;
@@ -21,6 +23,7 @@ namespace FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection
             Validate();
         }
 
+        public Guid CollectionId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public DateTime AcquisitionDate { get; private set; }
