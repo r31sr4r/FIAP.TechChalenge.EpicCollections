@@ -338,9 +338,9 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
             }
         }
 
-        [Fact(DisplayName = "UpdateWithItems")]
+        [Fact(DisplayName = "AddItemToCollection")]
         [Trait("Integration/Infra.Data", "CollectionRepository - Repositories")]
-        public async Task UpdateWithItems()
+        public async Task AddItemToCollection()
         {
             var dbContext = _fixture.CreateDbContext();
             var userId = Guid.NewGuid();
@@ -357,12 +357,7 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
 
             // Adiciona um item à coleção
             var newItem = _fixture.GetExampleCollectionItem(exampleCollection.Id);
-            exampleCollection.AddItem(newItem);
-
-            // Atualiza a coleção
-            exampleCollection.Update("Updated Name", "Updated Description", Category.Outros);
-            await collectionRepository.Update(exampleCollection, CancellationToken.None);
-            await dbContext.SaveChangesAsync(CancellationToken.None);
+            await collectionRepository.AddItemToCollection(newItem, CancellationToken.None);
 
             var dbCollection = await (_fixture.CreateDbContext(true))
                 .Collections.Include(c => c.Items)
@@ -370,11 +365,6 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
 
             dbCollection.Should().NotBeNull();
             dbCollection!.Id.Should().Be(exampleCollection.Id);
-            dbCollection.Name.Should().Be("Updated Name");
-            dbCollection.Description.Should().Be("Updated Description");
-            dbCollection.Category.Should().Be(Category.Outros);
-            dbCollection.UserId.Should().Be(exampleCollection.UserId);
-            dbCollection.CreatedAt.Should().BeCloseTo(exampleCollection.CreatedAt, TimeSpan.FromSeconds(1));
             dbCollection.Items.Should().ContainSingle();
 
             var dbItem = dbCollection.Items.First();
@@ -384,7 +374,6 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
             dbItem.Value.Should().Be(newItem.Value);
             dbItem.AcquisitionDate.Should().Be(newItem.AcquisitionDate);
         }
-
 
 
     }

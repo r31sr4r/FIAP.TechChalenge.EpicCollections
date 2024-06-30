@@ -37,8 +37,7 @@ public class AddCollectionItem : IAddCollectionItem
             request.PhotoUrl
         );
 
-        collection.AddItem(item);
-        await _collectionRepository.Update(collection, cancellationToken);
+        await _collectionRepository.AddItemToCollection(item, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return CollectionItemModelOutput.FromCollectionItem(item);

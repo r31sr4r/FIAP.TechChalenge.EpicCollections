@@ -1,5 +1,6 @@
 ﻿using FIAP.TechChalenge.EpicCollections.Application.Exceptions;
 using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
+using FIAP.TechChalenge.EpicCollections.Domain.Exceptions;
 using FIAP.TechChalenge.EpicCollections.Domain.Repository;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
     {
         private readonly EpicCollectionsDbContext _context;
         private DbSet<Collection> _collections => _context.Set<Collection>();
-
+        private DbSet<CollectionItem> _collectionItems => _context.Set<CollectionItem>();
         public CollectionRepository(EpicCollectionsDbContext context)
         {
             _context = context;
@@ -34,7 +35,6 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
         public async Task Update(Collection aggregate, CancellationToken cancellationToken)
         {
             var existingEntity = await _collections
-                .Include(c => c.Items)
                 .FirstOrDefaultAsync(x => x.Id == aggregate.Id, cancellationToken);
 
             if (existingEntity == null)
@@ -42,35 +42,9 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
                 throw new DbUpdateConcurrencyException($"Collection with id {aggregate.Id} not found");
             }
 
-            // Atualiza as propriedades da entidade principal
             _context.Entry(existingEntity).CurrentValues.SetValues(aggregate);
-
-            // Sincroniza os itens
-            foreach (var existingItem in existingEntity.Items.ToList())
-            {
-                if (!aggregate.Items.Any(i => i.Id == existingItem.Id))
-                {
-                    _context.Entry(existingItem).State = EntityState.Deleted;
-                }
-            }
-
-            foreach (var item in aggregate.Items)
-            {
-                var existingItem = existingEntity.Items.FirstOrDefault(i => i.Id == item.Id);
-                if (existingItem == null)
-                {
-                    existingEntity.AddItem(item);
-                    _context.Entry(item).State = EntityState.Added;
-                }
-                else
-                {
-                    _context.Entry(existingItem).CurrentValues.SetValues(item);
-                }
-            }
-
             await _context.SaveChangesAsync(cancellationToken);
         }
-
 
 
         public async Task Delete(Collection aggregate, CancellationToken cancellationToken)
@@ -126,6 +100,21 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
                 .Include(c => c.Items)
                 .Where(c => c.UserId == userId)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task AddItemToCollection(CollectionItem item, CancellationToken cancellationToken)
+        {
+            var collectionExists = await _collections
+                .AsNoTracking()
+                .AnyAsync(c => c.Id == item.CollectionId, cancellationToken);
+
+            if (!collectionExists)
+            {
+                throw new EntityNotFoundException($"Collection with id {item.CollectionId} not found");
+            }
+
+            await _collectionItems.AddAsync(item, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

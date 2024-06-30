@@ -34,4 +34,10 @@ public class CollectionPersistence
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<DomainEntity.Collection.CollectionItem?> GetItemById(Guid id)
+    => await _context
+        .CollectionItems
+        .AsNoTracking()
+        .FirstOrDefaultAsync(x => x.Id == id);
 }

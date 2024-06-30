@@ -33,7 +33,6 @@ public class AddCollectionItemTests
         var collection = _fixture.GetValidCollection();
         await dbContext.Collections.AddAsync(collection);
         await dbContext.SaveChangesAsync();
-        dbContext.ChangeTracker.Clear(); // Clear the change tracker to simulate a clean context
 
         var input = _fixture.GetValidInput(collection.Id);
         var currentDateTime = DateTime.Now;
@@ -80,6 +79,11 @@ public class AddCollectionItemTests
         var repository = new CollectionRepository(dbContext);
         var unitOfWork = new UnitOfWork(dbContext);
 
+        var collection = _fixture.GetValidCollection();
+        await dbContext.Collections.AddAsync(collection);
+        await dbContext.SaveChangesAsync();
+        input = new AddCollectionItemInput(collection.Id, input.Name, input.Description, input.AcquisitionDate, input.Value, input.PhotoUrl);
+
         var useCase = new UseCase.AddCollectionItem(
             repository, unitOfWork
         );
@@ -90,11 +94,13 @@ public class AddCollectionItemTests
             .ThrowAsync<EntityValidationException>()
             .WithMessage(expectedMessage);
 
-        var dbCollectionItems = await dbContext.Collections
-            .Include(c => c.Items)
+        var dbCollectionItems = await dbContext.CollectionItems
             .AsNoTracking()
             .ToListAsync();
 
         dbCollectionItems.Should().BeEmpty();
     }
+
+
+
 }
