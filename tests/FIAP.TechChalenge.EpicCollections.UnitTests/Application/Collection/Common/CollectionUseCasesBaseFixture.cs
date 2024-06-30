@@ -5,6 +5,7 @@ using FIAP.TechChalenge.EpicCollections.Domain.Repository;
 using FIAP.TechChalenge.EpicCollections.UnitTests.Common;
 using DomainEntity = FIAP.TechChalenge.EpicCollections.Domain.Entity;
 using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
+using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.AddCollectionItem;
 
 namespace FIAP.TechChalenge.EpicCollections.UnitTests.Application.Collection.Common;
 
@@ -13,24 +14,6 @@ public class CollectionUseCasesBaseFixture : BaseFixture
     public Mock<ICollectionRepository> GetRepositoryMock() => new();
 
     public Mock<IUnitOfWork> GetUnitOfWorkMock() => new();
-
-    public string GetValidCollectionName()
-    {
-        var collectionName = "";
-        while (collectionName.Length < 3)
-            collectionName = Faker.Commerce.ProductName();
-        if (collectionName.Length > 255)
-            collectionName = collectionName[..255];
-        return collectionName;
-    }
-
-    public string GetValidDescription()
-    {
-        var description = Faker.Commerce.ProductDescription();
-        if (description.Length > 1000)
-            description = description[..1000];
-        return description;
-    }
 
     public string GetValidName()
     {
@@ -42,24 +25,61 @@ public class CollectionUseCasesBaseFixture : BaseFixture
         return name;
     }
 
-    public Category GetValidCategory()
-    {
-        return Faker.PickRandom<Category>();
-    }
+    public string GetValidDescription()
+        => Faker.Commerce.ProductDescription();
 
-    public DomainEntity.Collection.Collection GetValidCollection(Guid? userId = null)
+    public decimal GetValidValue()
+        => Faker.Random.Decimal(0.1m, 1000m);
+
+    public DateTime GetValidAcquisitionDate()
+        => Faker.Date.Past();
+
+    public DomainEntity.Collection.Collection GetValidCollection(Guid? collectionId = null)
         => new(
-            userId ?? Guid.NewGuid(),
-            GetValidCollectionName(),
+            collectionId ?? Guid.NewGuid(),
+            GetValidName(),
             GetValidDescription(),
-            GetValidCategory()
+            Category.ActionFigures
         );
 
-    public List<DomainEntity.Collection.Collection> GetCollectionsList(Guid? userId = null, int length = 10)
+    public Category GetValidCategory()
+    => Faker.PickRandom<Category>();
+
+    public AddCollectionItemInput GetValidInput(Guid collectionId)
+        => new(
+            collectionId,
+            GetValidName(),
+            GetValidDescription(),
+            GetValidAcquisitionDate(),
+            GetValidValue(),
+            Faker.Internet.Url()
+        );
+
+    public AddCollectionItemInput GetInputWithInvalidName(Guid collectionId)
     {
-        var actualUserId = userId ?? Guid.NewGuid();
-        return Enumerable.Range(1, length)
-            .Select(_ => GetValidCollection(actualUserId))
-            .ToList();
+        var input = GetValidInput(collectionId);
+        input.Name = string.Empty;
+        return input;
+    }
+
+    public AddCollectionItemInput GetInputWithShortName(Guid collectionId)
+    {
+        var input = GetValidInput(collectionId);
+        input.Name = "ab";
+        return input;
+    }
+
+    public AddCollectionItemInput GetInputWithLongName(Guid collectionId)
+    {
+        var input = GetValidInput(collectionId);
+        input.Name = new string('a', 256);
+        return input;
+    }
+
+    public AddCollectionItemInput GetInputWithNegativeValue(Guid collectionId)
+    {
+        var input = GetValidInput(collectionId);
+        input.Value = -1;
+        return input;
     }
 }

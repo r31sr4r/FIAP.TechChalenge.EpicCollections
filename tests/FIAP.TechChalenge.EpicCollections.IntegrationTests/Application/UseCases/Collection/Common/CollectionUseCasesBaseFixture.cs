@@ -31,6 +31,16 @@ public class CollectionUseCasesBaseFixture : BaseFixture
             GetValidCategory()
         );
 
+    public DomainEntity.Collection.CollectionItem GetValidCollectionItem(Guid collectionId)
+        => new(
+            collectionId,
+            GetValidName(),
+            GetValidDescription(),
+            DateTime.Now,
+            Faker.Random.Decimal(1, 1000),
+            Faker.Internet.Url()
+        );
+
     public List<DomainEntity.Collection.Collection> GetCollectionsList(Guid? userId = null, int length = 10)
     {
         var generatedUserId = userId ?? Guid.NewGuid();
@@ -38,5 +48,4 @@ public class CollectionUseCasesBaseFixture : BaseFixture
             .Select(_ => GetValidCollection(generatedUserId))
             .ToList();
     }
-
 }
