@@ -68,6 +68,18 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
             )).ToList();
         }
 
+        public CollectionItem GetExampleCollectionItem(Guid collectionId)
+        {
+            return new CollectionItem(
+                collectionId,
+                Faker.Commerce.ProductName(),
+                Faker.Lorem.Sentence(),
+                DateTime.Now,
+                Faker.Random.Decimal(1, 1000),
+                Faker.Internet.Url()
+            );
+        }
+
 
     }
 }

@@ -4,6 +4,8 @@ using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
 using FIAP.TechChalenge.EpicCollections.Infra.Data.EF;
 using Repository = FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories;
 using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
+using Microsoft.EntityFrameworkCore;
+using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
 
 namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repositories.CollectionRepository
 {
@@ -335,6 +337,55 @@ namespace FIAP.TechChalenge.EpicCollections.IntegrationTests.Infra.Data.EF.Repos
                 collection.UserId.Should().Be(userId);
             }
         }
+
+        [Fact(DisplayName = "UpdateWithItems")]
+        [Trait("Integration/Infra.Data", "CollectionRepository - Repositories")]
+        public async Task UpdateWithItems()
+        {
+            var dbContext = _fixture.CreateDbContext();
+            var userId = Guid.NewGuid();
+            var exampleCollection = _fixture.GetExampleCollection(userId);
+            var exampleCollectionList = _fixture.GetExampleCollectionList(userId, 15);
+            exampleCollectionList.Add(exampleCollection);
+            await dbContext.AddRangeAsync(exampleCollectionList);
+            await dbContext.SaveChangesAsync(CancellationToken.None);
+
+            // Detach all entities to simulate a clean context
+            dbContext.ChangeTracker.Clear();
+
+            var collectionRepository = new Repository.CollectionRepository(dbContext);
+
+            // Adiciona um item à coleção
+            var newItem = _fixture.GetExampleCollectionItem(exampleCollection.Id);
+            exampleCollection.AddItem(newItem);
+
+            // Atualiza a coleção
+            exampleCollection.Update("Updated Name", "Updated Description", Category.Outros);
+            await collectionRepository.Update(exampleCollection, CancellationToken.None);
+            await dbContext.SaveChangesAsync(CancellationToken.None);
+
+            var dbCollection = await (_fixture.CreateDbContext(true))
+                .Collections.Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.Id == exampleCollection.Id);
+
+            dbCollection.Should().NotBeNull();
+            dbCollection!.Id.Should().Be(exampleCollection.Id);
+            dbCollection.Name.Should().Be("Updated Name");
+            dbCollection.Description.Should().Be("Updated Description");
+            dbCollection.Category.Should().Be(Category.Outros);
+            dbCollection.UserId.Should().Be(exampleCollection.UserId);
+            dbCollection.CreatedAt.Should().BeCloseTo(exampleCollection.CreatedAt, TimeSpan.FromSeconds(1));
+            dbCollection.Items.Should().ContainSingle();
+
+            var dbItem = dbCollection.Items.First();
+            dbItem.Id.Should().Be(newItem.Id);
+            dbItem.Name.Should().Be(newItem.Name);
+            dbItem.Description.Should().Be(newItem.Description);
+            dbItem.Value.Should().Be(newItem.Value);
+            dbItem.AcquisitionDate.Should().Be(newItem.AcquisitionDate);
+        }
+
+
 
     }
 }

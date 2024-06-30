@@ -33,23 +33,44 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
 
         public async Task Update(Collection aggregate, CancellationToken cancellationToken)
         {
-            var trackedEntity = _context.ChangeTracker
-                .Entries<Collection>()
-                .FirstOrDefault(e => e.Entity.Id == aggregate.Id);
+            var existingEntity = await _collections
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(x => x.Id == aggregate.Id, cancellationToken);
 
-            if (trackedEntity != null)
+            if (existingEntity == null)
             {
-                _context.Entry(trackedEntity.Entity).State = EntityState.Detached;
+                throw new DbUpdateConcurrencyException($"Collection with id {aggregate.Id} not found");
             }
 
-            _context.Entry(aggregate).State = EntityState.Modified;
+            // Atualiza as propriedades da entidade principal
+            _context.Entry(existingEntity).CurrentValues.SetValues(aggregate);
+
+            // Sincroniza os itens
+            foreach (var existingItem in existingEntity.Items.ToList())
+            {
+                if (!aggregate.Items.Any(i => i.Id == existingItem.Id))
+                {
+                    _context.Entry(existingItem).State = EntityState.Deleted;
+                }
+            }
+
             foreach (var item in aggregate.Items)
             {
-                _context.Entry(item).State = EntityState.Modified;
+                var existingItem = existingEntity.Items.FirstOrDefault(i => i.Id == item.Id);
+                if (existingItem == null)
+                {
+                    existingEntity.AddItem(item);
+                    _context.Entry(item).State = EntityState.Added;
+                }
+                else
+                {
+                    _context.Entry(existingItem).CurrentValues.SetValues(item);
+                }
             }
 
             await _context.SaveChangesAsync(cancellationToken);
         }
+
 
 
         public async Task Delete(Collection aggregate, CancellationToken cancellationToken)

@@ -33,13 +33,15 @@ public class AddCollectionItemTests
         var collection = _fixture.GetValidCollection();
         await dbContext.Collections.AddAsync(collection);
         await dbContext.SaveChangesAsync();
+        dbContext.ChangeTracker.Clear(); // Clear the change tracker to simulate a clean context
 
         var input = _fixture.GetValidInput(collection.Id);
         var currentDateTime = DateTime.Now;
 
         var output = await useCase.Handle(input, CancellationToken.None);
 
-        var dbCollection = await dbContext.Collections
+        var newDbContext = _fixture.CreateDbContext(true); // Use a new context to verify the result
+        var dbCollection = await newDbContext.Collections
             .Include(c => c.Items)
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == collection.Id);
