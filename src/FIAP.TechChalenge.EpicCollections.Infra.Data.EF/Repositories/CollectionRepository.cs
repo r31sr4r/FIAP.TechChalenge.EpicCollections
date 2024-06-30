@@ -26,20 +26,31 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
         {
             var collection = await _collections
                 .Include(c => c.Items)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(
-                    x => x.Id == id,
-                    cancellationToken
-                );
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             NotFoundException.ThrowIfNull(collection, $"Collection with id {id} not found");
             return collection!;
         }
 
         public async Task Update(Collection aggregate, CancellationToken cancellationToken)
         {
-            _collections.Update(aggregate);
+            var trackedEntity = _context.ChangeTracker
+                .Entries<Collection>()
+                .FirstOrDefault(e => e.Entity.Id == aggregate.Id);
+
+            if (trackedEntity != null)
+            {
+                _context.Entry(trackedEntity.Entity).State = EntityState.Detached;
+            }
+
+            _context.Entry(aggregate).State = EntityState.Modified;
+            foreach (var item in aggregate.Items)
+            {
+                _context.Entry(item).State = EntityState.Modified;
+            }
+
             await _context.SaveChangesAsync(cancellationToken);
         }
+
 
         public async Task Delete(Collection aggregate, CancellationToken cancellationToken)
         {
