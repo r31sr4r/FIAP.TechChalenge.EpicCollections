@@ -2,7 +2,6 @@
 using FIAP.TechChalenge.EpicCollections.Domain.Common.Enums;
 using FIAP.TechChalenge.EpicCollections.E2ETests.Base;
 using DomainEntity = FIAP.TechChalenge.EpicCollections.Domain.Entity;
-using System.Threading.Tasks;
 using Bogus.Extensions.Brazil;
 
 namespace FIAP.TechChalenge.EpicCollections.E2ETests.Api.Collection.Common;
@@ -124,4 +123,22 @@ public class CollectionBaseFixture : BaseFixture
     public string GetInvalidDescription() => "";
 
     public Category GetInvalidCategory() => (Category)999; // This simulates an invalid category.
+
+    public DomainEntity.Collection.CollectionItem GetValidCollectionItem(Guid collectionId)
+    {
+        return new DomainEntity.Collection.CollectionItem(
+            collectionId,
+            GetValidCollectionName(),
+            GetValidDescription(),
+            DateTime.Now,
+            GetValidValue(),
+            Faker.Internet.Url()
+        );
+    }
+
+    public decimal GetValidValue()
+    {
+        return Faker.Random.Decimal(0.1m, 1000m);
+    }
+
 }

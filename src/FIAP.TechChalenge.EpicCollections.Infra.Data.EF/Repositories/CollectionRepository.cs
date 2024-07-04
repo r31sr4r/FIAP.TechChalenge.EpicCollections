@@ -116,6 +116,25 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
             await _collectionItems.AddAsync(item, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task DeleteItemFromCollection(Guid collectionId, Guid itemId, CancellationToken cancellationToken)
+        {
+            var collection = await _collections
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.Id == collectionId, cancellationToken);
+
+            NotFoundException.ThrowIfNull(collection, $"Collection with id {collectionId} not found");
+
+            var item = collection.Items.FirstOrDefault(i => i.Id == itemId);
+            if (item == null)
+            {
+                throw new NotFoundException($"Collection item with id {itemId} not found in collection {collectionId}");
+            }
+
+            _collectionItems.Remove(item);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
     }
 
 }

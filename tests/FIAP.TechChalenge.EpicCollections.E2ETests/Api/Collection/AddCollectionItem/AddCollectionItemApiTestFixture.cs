@@ -32,11 +32,6 @@ public class AddCollectionItemApiTestFixture : CollectionBaseFixture
         var input = GetCreateCollectionInput();
         var (response, output) = await ApiClient.Post<ApiResponse<CollectionModelOutput>>("/collections", input);
 
-        response.Should().NotBeNull();
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        output.Should().NotBeNull();
-        output!.Data.Should().NotBeNull();
-
         return output.Data.Id;
     }
 

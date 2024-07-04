@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using FIAP.TechChalenge.EpicCollections.Api.Extensions;
 using FIAP.TechChalenge.EpicCollections.Api.Filters;
 using FIAP.TechChalenge.EpicCollections.Api.ApiModels.Collection;
+using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.DeleteCollectionItem;
 
 namespace FIAP.TechChalenge.EpicCollections.Api.Controllers;
 
@@ -56,4 +57,24 @@ public class CollectionItemsController : ControllerBase
             new ApiResponse<CollectionItemModelOutput>(result)
         );
     }
+
+    [HttpDelete("{itemId}")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ServiceFilter(typeof(ValidateUserIdFilter))]
+    public async Task<IActionResult> DeleteItem(
+           [FromRoute] Guid collectionId,
+           [FromRoute] Guid itemId,
+           CancellationToken cancellationToken
+    )
+    {
+        var userId = (Guid)HttpContext.Items["UserId"]!;
+
+        var input = new DeleteCollectionItemInput(collectionId, itemId);
+
+        await _mediator.Send(input, cancellationToken);
+        return Ok(new ApiResponse<string>("Item deleted successfully"));
+    }
+
 }

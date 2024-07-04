@@ -10,4 +10,7 @@ public interface ICollectionRepository
     Task<IReadOnlyList<Collection>> GetCollectionsByUserId(Guid userId, CancellationToken cancellationToken);
 
     Task AddItemToCollection(CollectionItem item, CancellationToken cancellationToken);
+
+    Task DeleteItemFromCollection(Guid item, Guid itemId, CancellationToken cancellationToken);
+
 }

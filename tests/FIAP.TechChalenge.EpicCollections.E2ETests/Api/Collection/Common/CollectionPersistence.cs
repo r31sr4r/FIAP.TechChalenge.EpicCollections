@@ -14,12 +14,25 @@ public class CollectionPersistence
     public async Task<DomainEntity.Collection.Collection?> GetById(Guid id)
         => await _context
             .Collections
+            .Include(c => c.Items)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task Insert(DomainEntity.Collection.Collection collection)
+    {
+        await _context.Collections.AddAsync(collection);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task InsertList(List<DomainEntity.Collection.Collection> collections)
     {
         await _context.Collections.AddRangeAsync(collections);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task Update(DomainEntity.Collection.Collection collection)
+    {
+        _context.Collections.Update(collection);
         await _context.SaveChangesAsync();
     }
 
@@ -40,4 +53,10 @@ public class CollectionPersistence
         .CollectionItems
         .AsNoTracking()
         .FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task AddItemToCollection(DomainEntity.Collection.CollectionItem item)
+    {
+        await _context.CollectionItems.AddAsync(item);
+        await _context.SaveChangesAsync();
+    }
 }
