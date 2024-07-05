@@ -8,6 +8,7 @@ using FIAP.TechChalenge.EpicCollections.Api.Extensions;
 using FIAP.TechChalenge.EpicCollections.Api.Filters;
 using FIAP.TechChalenge.EpicCollections.Api.ApiModels.Collection;
 using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.DeleteCollectionItem;
+using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.GetCollectionItem;
 
 namespace FIAP.TechChalenge.EpicCollections.Api.Controllers;
 
@@ -77,4 +78,20 @@ public class CollectionItemsController : ControllerBase
         return Ok(new ApiResponse<string>("Item deleted successfully"));
     }
 
+    [HttpGet("{itemId}")]
+    [ProducesResponseType(typeof(ApiResponse<CollectionItemModelOutput>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ServiceFilter(typeof(ValidateUserIdFilter))]
+    public async Task<IActionResult> GetItem(
+        [FromRoute] Guid collectionId,
+        [FromRoute] Guid itemId,
+        CancellationToken cancellationToken)
+    {
+        var input = new GetCollectionItemInput(collectionId, itemId);
+
+        var result = await _mediator.Send(input, cancellationToken);
+
+        return Ok(new ApiResponse<CollectionItemModelOutput>(result));
+    }
 }

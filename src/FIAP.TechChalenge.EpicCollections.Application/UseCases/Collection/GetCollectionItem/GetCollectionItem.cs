@@ -1,5 +1,5 @@
-﻿using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.Common;
-using FIAP.TechChalenge.EpicCollections.Domain.Exceptions;
+﻿using FIAP.TechChalenge.EpicCollections.Application.Exceptions;
+using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.Common;
 using FIAP.TechChalenge.EpicCollections.Domain.Repository;
 
 namespace FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.GetCollectionItem
@@ -22,7 +22,7 @@ namespace FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.GetC
             var item = collection.Items.FirstOrDefault(i => i.Id == request.ItemId);
 
             if (item == null)
-                throw new EntityNotFoundException($"Collection item with id {request.ItemId} not found in collection {request.CollectionId}");
+                throw new NotFoundException($"Collection item with id {request.ItemId} not found in collection {request.CollectionId}");
 
             return CollectionItemModelOutput.FromCollectionItem(item);
         }

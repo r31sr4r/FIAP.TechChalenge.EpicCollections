@@ -97,7 +97,7 @@ namespace FIAP.TechChalenge.EpicCollections.UnitTests.Application.Collection.Get
 
             var task = async () => await useCase.Handle(input, CancellationToken.None);
 
-            await task.Should().ThrowAsync<EntityNotFoundException>()
+            await task.Should().ThrowAsync<NotFoundException>()
                 .WithMessage($"Collection item with id {itemId} not found in collection {exampleCollection.Id}");
 
             repositoryMock.Verify(repository => repository.Get(
