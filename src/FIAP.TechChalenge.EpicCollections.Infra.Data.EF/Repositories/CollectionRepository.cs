@@ -135,6 +135,13 @@ namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task<Collection?> GetCollectionWithItems(Guid collectionId, CancellationToken cancellationToken)
+        {
+            return await _collections
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.Id == collectionId, cancellationToken);
+        }
+
     }
 
 }

@@ -3,14 +3,10 @@ using FIAP.TechChalenge.EpicCollections.Domain.SeedWork;
 using FIAP.TechChalenge.EpicCollections.Domain.Entity.Collection;
 
 namespace FIAP.TechChalenge.EpicCollections.Domain.Repository;
-public interface ICollectionRepository
-    : IGenericRepository<Collection>,
-    ISearchableRepository<Collection>
+public interface ICollectionRepository : IGenericRepository<Collection>, ISearchableRepository<Collection>
 {
     Task<IReadOnlyList<Collection>> GetCollectionsByUserId(Guid userId, CancellationToken cancellationToken);
-
     Task AddItemToCollection(CollectionItem item, CancellationToken cancellationToken);
-
-    Task DeleteItemFromCollection(Guid item, Guid itemId, CancellationToken cancellationToken);
-
+    Task DeleteItemFromCollection(Guid collectionId, Guid itemId, CancellationToken cancellationToken);
+    Task<Collection?> GetCollectionWithItems(Guid collectionId, CancellationToken cancellationToken);
 }
