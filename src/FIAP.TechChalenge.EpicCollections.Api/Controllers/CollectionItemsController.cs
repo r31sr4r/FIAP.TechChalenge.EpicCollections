@@ -11,6 +11,7 @@ using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.DeleteCo
 using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.GetCollectionItem;
 using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.ListCollectionItems;
 using FIAP.TechChalenge.EpicCollections.Domain.SeedWork.SearchableRepository;
+using FIAP.TechChalenge.EpicCollections.Application.UseCases.Collection.UpdateCollectionItem;
 
 namespace FIAP.TechChalenge.EpicCollections.Api.Controllers;
 
@@ -110,5 +111,34 @@ public class CollectionItemsController : ControllerBase
         var input = new ListCollectionItemsInput(collectionId);
         var output = await _mediator.Send(input, cancellationToken);
         return Ok(new ApiResponse<CollectionModelOutput>(output));
+    }
+
+    [HttpPut("{itemId}")]
+    [ProducesResponseType(typeof(ApiResponse<CollectionItemModelOutput>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ServiceFilter(typeof(ValidateUserIdFilter))]
+    public async Task<IActionResult> UpdateItem(
+       [FromRoute] Guid collectionId,
+       [FromRoute] Guid itemId,
+       [FromBody] UpdateCollectionItemApiInput apiInput,
+       CancellationToken cancellationToken
+   )
+    {
+        var userId = (Guid)HttpContext.Items["UserId"]!;
+
+        var input = new UpdateCollectionItemInput(
+            collectionId,
+            itemId,
+            apiInput.Name,
+            apiInput.Description,
+            apiInput.AcquisitionDate,
+            apiInput.Value,
+            apiInput.PhotoUrl
+        );
+
+        var result = await _mediator.Send(input, cancellationToken);
+        return Ok(new ApiResponse<CollectionItemModelOutput>(result));
     }
 }
