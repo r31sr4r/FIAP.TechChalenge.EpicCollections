@@ -81,9 +81,7 @@ public class ApiClient
     where TOutput : class
     {
         var url = PrepareGetRoute(route, queryStringParametersObject);
-        var response = await _httpClient.GetAsync(
-                url
-            );
+        var response = await _httpClient.GetAsync(url);
 
         var output = await GetOutput<TOutput>(response);
 
@@ -106,6 +104,8 @@ public class ApiClient
 
         return QueryHelpers.AddQueryString(route, parametersDictionary!);
     }
+
+
 
     public async Task<(HttpResponseMessage?, TOutput?)> Delete<TOutput>(
         string route
