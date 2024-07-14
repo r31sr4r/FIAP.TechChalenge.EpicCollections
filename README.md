@@ -10,6 +10,10 @@ Epic Collections é uma plataforma de software que permite aos usuários registrar
 - Operações CRUD para coleções e itens de coleção
 - Seguindo os princípios SOLID e utilizando Entity Framework para manipulação de dados
 
+## 
+Link para o documento de requisitos no Notion
+[Requisitos Fase 4](https://resilient-cobalt-7ff.notion.site/Fase-4-Tech-Challenge-38907b4e33ad4ceba3eb8ad2e95f37c0)
+
 
 ## Começando
 
@@ -28,14 +32,14 @@ O projeto utiliza um banco de dados que precisa ser iniciado usando Docker. Nave
 Após iniciar o banco de dados, aplique as migrações do Entity Framework para configurar o esquema do banco de dados. Execute o seguinte comando:
 
 ```bash
-dotnet ef database update --project src/EpicCollections.Api
+dotnet ef database update --project .\src\FIAP.TechChalenge.EpicCollections.Api\
 ```
 
 3. Executar a Aplicação
 
 Agora você pode executar a aplicação. Use o seguinte comando:
 ```bash
-dotnet run --project src/EpicCollections.Api
+dotnet run --project .\src\FIAP.TechChalenge.EpicCollections.Api\
 ```
 
 

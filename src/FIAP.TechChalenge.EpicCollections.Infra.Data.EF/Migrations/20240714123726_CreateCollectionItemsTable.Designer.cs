@@ -3,6 +3,7 @@ using System;
 using FIAP.TechChalenge.EpicCollections.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FIAP.TechChalenge.EpicCollections.Infra.Data.EF.Migrations
 {
     [DbContext(typeof(EpicCollectionsDbContext))]
-    partial class EpicCollectionsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240714123726_CreateCollectionItemsTable")]
+    partial class CreateCollectionItemsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

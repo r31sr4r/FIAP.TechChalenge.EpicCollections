@@ -81,6 +81,7 @@ public class CollectionItemsController : ControllerBase
         return Ok(new ApiResponse<string>("Item deleted successfully"));
     }
 
+    [AllowAnonymous]
     [HttpGet("{itemId}")]
     [ProducesResponseType(typeof(ApiResponse<CollectionItemModelOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
