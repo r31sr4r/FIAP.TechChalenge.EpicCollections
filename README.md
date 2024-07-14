@@ -3,6 +3,7 @@
 
 Epic Collections é uma plataforma de software que permite aos usuários registrar e catalogar qualquer tipo de coleção (e.g., action figures, camisetas, instrumentos, tênis, figurinhas). O sistema também possibilita a criação de concursos de itens específicos ou de coleções completas.
 
+[Vídeo no Youtube com a explicação do projeto](https://youtu.be/w-SL_lmIRUQ)
 
 ## Funcionalidades
 
